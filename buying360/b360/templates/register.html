@@ -1,0 +1,47 @@
+{% extends 'base.html' %} {% block links %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/registerStyle.css') }}"
+/>
+{% endblock %} {% block title %} Register {% endblock %} {% block content %}
+<div class="row-register">
+  <br />
+  <br />
+  <form method="POST" class="form-register" autocomplete="off">
+    {{ form.hidden_tag() }}
+    <h1 class="h3 mb-3 font-weight-normal" style="text-align: center">
+      Please Create Your Account
+    </h1>
+    <br />
+    <div class="register-fields">
+      <div class="row">
+        <div class="col-4">
+          {{ form.username.label(class="label-register") }}
+        </div>
+        <div class="col-8">{{ form.username(class="form-control") }}</div>
+      </div>
+      <br />
+      <div class="row">
+        <div class="col-4">{{ form.password1.label() }}</div>
+        <div class="col-8">{{ form.password1(class="form-control") }}</div>
+      </div>
+      <br />
+      <div class="row">
+        <div class="col-4">{{ form.password2.label() }}</div>
+        <div class="col-8">{{ form.password2(class="form-control") }}</div>
+      </div>
+    </div>
+    <br />
+    <br />
+    <br />
+    <div class="text-center">
+      {{ form.submit(class = "btn btn-lg btn-primary")}}
+    </div>
+    <div class="reg-link checkbox mb-3">
+      <h6>Already have an account?</h6>
+      <a href="{{ url_for('login_page') }}">Click here to sign in</a>
+    </div>
+  </form>
+</div>
+
+{%endblock%}

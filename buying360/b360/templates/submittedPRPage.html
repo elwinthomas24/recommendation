@@ -1,0 +1,52 @@
+{% extends 'base.html' %} {% block links %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/cartPageStyle.css') }}"
+/>{% endblock %}{% block title %} Cart {% endblock %} {% block content %}
+
+<div class="container">
+    <h2>Clickable Table</h2>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Sl.No</th>
+          <th>Pr ID</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-url="another-page.html">
+          <td>1</td>
+          <td>PR001</td>
+          <td>2024-03-08</td>
+        </tr>
+        <tr data-url="another-page.html">
+          <td>2</td>
+          <td>PR002</td>
+          <td>2024-03-09</td>
+        </tr>
+        <!-- Add more rows as needed -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Bootstrap JS and jQuery (for click event handling) -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  <script>
+    $(document).ready(function() {
+      // Add click event listener to table rows
+      $('tbody tr').click(function() {
+        // Get the URL from the data-url attribute of the clicked row
+        var url = $(this).data('url');
+        // Navigate to the specified URL
+        window.location.href = url;
+      });
+    });
+  </script>
+              
+        
+  
+{% endblock %}

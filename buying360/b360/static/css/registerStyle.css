@@ -1,0 +1,46 @@
+/* .row {
+  margin: 5rem auto;
+  width: 50%;
+} */
+
+.row-login {
+  margin: 5rem auto;
+  width: 40%;
+}
+
+.row-register {
+  margin: 1rem auto;
+  width: 60%;
+}
+
+.register-fields {
+  margin-top: 2.5rem;
+}
+
+/* h1 {
+  text-align: center;
+} */
+
+.login-input {
+  width: 90%;
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.reg-link {
+  margin-top: 2.5rem;
+  /* margin-bottom: 5rem; */
+}
+
+/* .input-style1 {
+  width: 65%;
+  margin-left: 4rem;
+  border: 2px solid rgb(184, 182, 182);
+}
+
+.input-style2 {
+  width: 25%;
+  margin-left: 2rem;
+  border: 2px solid rgb(184, 182, 182);
+} */

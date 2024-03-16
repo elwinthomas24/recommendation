@@ -1,0 +1,74 @@
+{% extends 'base.html' %} {% block links %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/landingPageStyle.css') }}"
+/>{% endblock %}{% block title %} Events {% endblock %} {% block content %}
+
+    <div class="section-1">
+          <div class="col-15">
+            <span class="page-title">
+              <h2>Find things you need for work.</h2>
+            </span>
+            <form action="/process_search" method="POST" class="search-form" autocomplete="off">
+
+                  <input type="text" class="search-bar " name="searched" placeholder="Search..." autocomplete="false">
+                  <button type="submit" class="btn search-submit ">Search</button>
+              </form>
+          </div>
+      </div>
+      <!-- <div class ="row"> -->
+        <div class="container popular-items-section">
+          <div class="popular-items"><h5>Popular Items</h5></div>
+        <!-- </div>
+        <div class="container"> -->
+          <div class="row">
+            <div class="col-md-4">
+              <div class="card">
+                <img src="static/img/xm4.png" class="card-img-top" alt="Product Image">
+                <div class="card-body">
+                  <h5 class="card-title">Headphones</h5>
+                  <form action = "/process_search" method="POST" autocomplete="off">
+                    <input type="text" style="visibility: hidden;" name="searched" value="headphone" >
+                    <div class="text-left">
+                    <button type="submit" class="btn btn-primary ">Browse</button>
+                  </div>
+                </form>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card">
+                <img src="static/img/logitech-mice.png" class="card-img-top" alt="Product Image">
+                <div class="card-body">
+                  <h5 class="card-title">Mice</h5>
+                  <form action = "/process_search" method="POST" autocomplete="off">
+                    <input type="text" style="visibility: hidden;" name="searched" value="mouse" >
+                    <div class="text-left">
+                      <button type="submit" class="btn btn-primary ">Browse</button>
+                    </div>
+              
+                </form>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card">
+                <img src="static/img/jbl-earphones.png" class="card-img-top" alt="Product Image">
+                <div class="card-body">
+                  <h5 class="card-title">Earphones</h5>
+                  <form action ="/process_search" method="POST" autocomplete="off">
+                    <input type="text" style="visibility: hidden;" name="searched" value="earphone" >
+                    <div class="text-left">
+                      <button type="submit" class="btn btn-primary ">Browse</button>
+                    </div>
+                </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+      <!-- </div> -->
+  
+{% endblock %}

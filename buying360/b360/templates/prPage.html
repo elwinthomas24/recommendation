@@ -1,0 +1,40 @@
+{% extends 'base.html' %} {% block links %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/cartPageStyle.css') }}"
+/>{% endblock %}{% block title %} Purchase Requisition {% endblock %} {% block content %}
+
+    <div class="container">
+        <!-- <div class="col-9 "> -->
+            <!-- <div class="row" style="margin: 2.5rem 7rem 0rem 7rem">
+                <div class="col-lg-9">
+                    <h3>Order Summary</h3>
+                </div>
+            </div> -->
+            <div class="row">
+            {% for pr_item in pr_items %}
+            
+                
+                  <div class="col-lg-9">
+                    <div class="card wide-card line-item-cards">
+                      <div class="card-body">
+                        <h5 class="card-title">{{pr_item.product_name}}</h5>
+                        <p class="card-text">Quantity: {{pr_item.quantity}}</p>
+                        <p class="card-text">Cost: <span style="color:green">${{pr_item.total_price}}</span></p>
+                        <!-- You can add more content here -->
+                      </div>
+                    </div>
+                  </div>
+                
+             
+
+            {% endfor %}
+        <!-- </div> -->
+        
+        
+            </div>
+              </div>
+        </div>
+      </div>
+  
+{% endblock %}

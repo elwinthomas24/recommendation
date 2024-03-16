@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/homeStyle.css') }}"
+    />
+
+    <script defer src="static/js/script.js"></script>
+    <title>Home Page</title>
+  </head>
+  <body>
+    <header>
+      <nav class="nav">
+        <a href="{{ url_for('home_page')  }}"
+          ><img
+            src="static/img/icon.png"
+            alt="XLR8 logo"
+            class="nav__logo"
+            id="logo"
+        /></a>
+
+        <ul class="nav__links">
+          <li class="nav__item">
+            <a class="nav__link" href="#section--1">Features</a>
+          </li>
+          <!-- <li class="nav__item">
+            <a class="nav__link" href="#">Operations</a>
+          </li> -->
+          <!-- <li class="nav__item">
+            <a class="nav__link" href="#section--3">Gallery</a>
+          </li> -->
+        </ul>
+        <ul class="login__links">
+          <li class="nav__item">
+            <a
+              class="nav__link"
+              id="event_link"
+              href="{{url_for('home_page')}}"
+              >Events</a
+            >
+          </li>
+          <li class="nav__item">
+            <a
+              class="login__link nav__link--btn btn--show-modal"
+              href="{{url_for('login_page')}}"
+              >Login</a
+            >
+          </li>
+        </ul>
+      </nav>
+
+      <!-- <section class="hero"> -->
+      <div class="hero-text-box">
+        <h1>
+          Welcome to Buying360
+          <br />Please login to get started.
+        </h1>
+        <!-- <button class="btn--text btn--scroll-to">Learn more &DownArrow;</button> -->
+      </div>
+    </header>
+    <!-- </section> -->
+
+    <!-- <section class="section" id="section--1">
+      <div class="section__title">
+        <h2 class="section__description">Features</h2>
+        <h3 class="section__header">
+          Everything you need to manage your team and more.
+        </h3>
+      </div>
+
+      <div class="features">
+        <img
+          src="static/img/digital-lazy.jpg"
+          data-src="static/img/digital.jpg"
+          alt="Computer"
+          class="features__img lazy-img"
+        />
+        <div class="features__feature">
+          <div class="features__icon">
+            <svg>
+              <use xlink:href="static/img/icons.svg#icon-monitor"></use>
+            </svg>
+          </div>
+          <h5 class="features__header">Online Registration</h5>
+          <p>
+            Fully online sign-up and registration for a hassle-free experience.
+          </p>
+        </div>
+
+        <div class="features__feature">
+          <div class="features__icon">
+            <svg>
+              <use xlink:href="static/img/icons.svg#icon-map"></use>
+            </svg>
+          </div>
+          <h5 class="features__header"></h5>
+          <p>
+            Make use of the court-finder to find closest matches around you!
+            Also use it to setup your own matches and challenge your friends!
+          </p>
+        </div>
+        <img
+          src="static/img/map-lazy.jpg"
+          data-src="static/img/map.png"
+          alt="map"
+          class="features__img lazy-img"
+        />
+
+         <img
+          src="static/img/digital-lazy.jpg"
+          data-src="static/img/digital.jpg"
+          alt="Credit card"
+          class="features__img lazy-img"
+        />
+        <div class="features__feature">
+          <div class="features__icon">
+            <svg>
+              <use xlink:href="img/icons.svg#icon-credit-card"></use>
+            </svg>
+          </div>
+          <h5 class="features__header">Free debit card included</h5>
+          <p>
+            Quasi, fugit in cumque cupiditate reprehenderit debitis animi enim
+            eveniet consequatur odit quam quos possimus assumenda dicta fuga
+            inventore ab.
+          </p>
+        </div> -->
+      <!-- </div>
+    </section>  -->
+    <!-- <section class="section" id="section--3">
+      <div class="section__title">
+        <h2 class="section__description">Gallery</h2>
+      </div>
+      <div class="slider">
+        <div class="slide"><img src="static/img/bg1.jpg" /></div>
+         <div class="slide"><img src="static/img/bg2.jpg" /></div> -->
+        <!-- <div class="slide"><img src="static/img/bg3.jpg" /></div>
+        <div class="slide"><img src="static/img/bg4.jpg" /></div>
+        <div class="slide"><img src="static/img/bg5.jpg" /></div>
+        <div class="dots"></div>
+
+        <div class="dots"></div>
+      </div>
+    </section>  -->
+    <!-- <footer class="footer">
+      <ul class="footer__nav">
+        <li class="footer__item">
+          <a class="footer__link" href="{{url_for('home_page')}}">About</a>
+        </li>
+        <li class="footer__item">
+          <a class="footer__link" href="#">Pricing</a>
+        </li>
+        <li class="footer__item">
+          <a class="footer__link" href="#">Terms of Use</a>
+        </li>
+        <li class="footer__item">
+          <a class="footer__link" href="#">Privacy Policy</a>
+        </li>
+        <li class="footer__item">
+          <a class="footer__link" href="#">Careers</a>
+        </li>
+        <li class="footer__item">
+          <a class="footer__link" href="#">Blog</a>
+        </li> -->
+        <!-- <li class="footer__item">
+          <a class="footer__link" href="#">Contact Us</a>
+        </li>
+      </ul> -->
+      <!-- <img src="static/img/icon.png" alt="Logo" class="footer__logo" />
+      <p class="footer__copyright">&copy; Copyright 2021 XLR8</p>
+    </footer> -->
+  </body>
+</html>
