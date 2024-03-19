@@ -24,7 +24,9 @@
                 {% for searched_product in searched_products %}
                 <div class="col-md-4">
                   <div class="card">
-                    <img src="static/img/logitech-mice.png" class="card-img-top" alt="Product Image">
+                    
+                    <img src="static/img/product_imgs/{{searched_product.id}}.png" class="card-img-top" alt="Product Image">
+                 
                     <div class="card-body">
                       <h5 class="card-title">{{ searched_product.product_name }}</h5>
                       <p class="card-text"><span style="font-weight: bold;">{{searched_product.price}}</span> USD per each</p>
@@ -51,3 +53,4 @@
      
   
 {% endblock %}
+

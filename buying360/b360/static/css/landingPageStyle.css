@@ -90,3 +90,19 @@ thead {
 } */
 
 /* #26495f, #42708d */
+
+
+
+.card-img-top {
+  width: 300px; /* Set your desired width */
+  height: 300px; /* Set your desired height */
+  object-fit: contain; 
+
+}
+
+.card-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px; /* Adjust this width according to your preference */
+}

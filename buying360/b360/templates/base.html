@@ -105,6 +105,18 @@
       /></a>
       <p class="footer__copyright">Buying360</p>
     </footer>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        var cardTitles = document.querySelectorAll(".card-title");
+        cardTitles.forEach(function(title) {
+          var maxChars = 30; // Adjust this number according to your preference
+          var text = title.textContent;
+          if (text.length > maxChars) {
+            title.textContent = text.substr(0, maxChars) + '...';
+          }
+        });
+      });
+    </script>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

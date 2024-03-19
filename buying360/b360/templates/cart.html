@@ -54,6 +54,42 @@
             </div>
             {% endif %}
               </div>
+              {% if line_items != [] %}
+              <div class="col-15">
+                <div class="container popular-items-section">
+                  
+                  <div class="popular-items"><h5>You may also like ...</h5></div>
+                  {% if recommended_products|length == 0 %}
+                    <div style="text-align: center;"><h4>Oops! We don't have any recommendations for you :\</h4></div>
+                    {% else %}
+                  <div class="row">
+                    {% for recommended_product in recommended_products %}
+                    <div class="col-md-4">
+                      <div class="card">
+                        <img src="static/img/product_imgs/{{recommended_product.id}}.png" class="card-img-top" alt="Product Image">
+                        <div class="card-body">
+                          <h5 class="card-title">{{ recommended_product.product_name }}</h5>
+                          <p class="card-text"><span style="font-weight: bold;">{{recommended_product.price}}</span> USD per each</p>
+                          <form method="POST" >
+                            {{ add_to_cart_form.hidden_tag() }}
+                          <input
+              id="add_to_cart_item"
+              name="add_to_cart_item"
+              type="hidden"
+              value="{{recommended_product.id}}"
+            />
+            {{ add_to_cart_form.submit(class = "btn btn-primary btn-block")}}
+                          
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                  </div>
+              </div>
+          </div>
+          {% endif%}
               
         
   
