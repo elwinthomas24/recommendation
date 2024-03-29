@@ -81,7 +81,15 @@ def register_page():
 @login_required
 def landing_page():
         form = SearchForm()
-        return render_template('landingPage.html', form = form)
+        popular_products = []
+        df=pd.read_csv('/Users/I527231/Documents/Dissertation/git folder/recommendation/buying360/b360/data/popular.csv')
+        first_6_ids = list(df['id'].head(3))
+        print("top 6")
+        print(first_6_ids)
+        for product_id in first_6_ids:
+            popular_products.append(Products.query.filter_by(id=product_id).first())
+
+        return render_template('landingPage.html', form = form, popular_products = popular_products)
     #####   search bar form ####
 
     # popular_item1_form = PopItem1Form()
@@ -96,6 +104,17 @@ def process_search():
     search_query = request.form['searched']
     print(search_query)
     return redirect(url_for('catalog_page', search_query = search_query))
+
+
+###### handles add recommended items to cart in cart page
+@app.route('/add_recommended', methods = ['GET','POST'])
+@login_required
+def add_recommended_product():
+    add_to_cart_form = AddToCart()
+    if add_to_cart_form.validate_on_submit():
+        addToCart()
+    print("recommended item added")
+    return redirect(url_for('cart_page'))
 
 def addToCart():
     if request.method == 'POST':
@@ -146,43 +165,7 @@ def catalog_page():
     add_to_cart_form = AddToCart()
     lineItemToInsert = CartLineItem()
     if add_to_cart_form.validate_on_submit():
-        addToCart()
-        # if request.method == 'POST':
-        #     #Add to cart logic
-        #     add_to_cart_item = request.form.get('add_to_cart_item')
-        #     add_to_cart_item_object = Products.query.filter_by(id=add_to_cart_item).first()
-        #     if add_to_cart_item_object:
-        #         line_item = CartLineItem.query.filter_by(
-        #             product_id=add_to_cart_item_object.id,
-        #             user_id = current_user.user_id).first()
-        #         #### update quantity and price if it exists.
-        #         if line_item:
-        #             line_item.quantity = line_item.quantity + 1
-        #             line_item.total_price = add_to_cart_item_object.price * line_item.quantity
-        #         ### set quantity and total price for first item insertion    
-        #         else:
-        #             quantity = 1
-        #             total_price = add_to_cart_item_object.price
-
-        #             lineItemToInsert = CartLineItem(
-        #             product_id = add_to_cart_item_object.id,
-        #             user_id = current_user.user_id,
-        #             product_name = add_to_cart_item_object.product_name,                
-        #             product_description = add_to_cart_item_object.product_description,
-        #             product_img= "abc",
-        #             price = add_to_cart_item_object.price,
-        #             quantity = quantity,
-        #             total_price = total_price
-        #             )
-        #             db.session.add(lineItemToInsert)
-        #             db.session.commit()
-                        
-                        
-        #         # current_user.user_cart.contains(add)
-        #         add_to_cart_item_object.add_to_cart_for_user(current_user)
-
-                    
-        #         flash(f"Item added to cart.", category='success')        
+        addToCart()      
         
     return render_template('catalog.html', add_to_cart_form = add_to_cart_form, searched_products = searched_products, search_query = search_query)
 
@@ -195,24 +178,41 @@ def cart_page():
     submit_request_form = SubmitPRForm()
     add_to_cart_form = AddToCart()
     ###recommendations logic
+    line_item_product_id_list = []
     recommendations_list = []       ##### this list will contain the product ids of recommended products based on current cart
     recommended_products_from_list = []
 
     for line_item in line_items:
+        line_item_product_id_list.append(str(line_item.product_id))
         ###recommendations
         column_names=['id', 'brand', 'name', 'reviews.rating', 'reviews.username']
-        df=pd.read_csv('/Users/I527231/Documents/Dissertation/buying360/b360/data/Reviews.csv',names=column_names)
+        df=pd.read_csv('/Users/I527231/Documents/Dissertation/git folder/recommendation/buying360/b360/data/Reviews_new.csv',names=column_names)
         matrix=pd.pivot_table(data=df, values='reviews.rating', index='reviews.username',columns='id')
-        svd = joblib.load('/Users/I527231/Documents/Dissertation/buying360/b360/ml_models/svd_model.pkl')
-        df = hybrid_recommendations(current_user.username, line_item.product_id, matrix, svd)
+        svd = joblib.load('/Users/I527231/Documents/Dissertation/git folder/recommendation/buying360/b360/ml_models/svd_model.pkl')
+        df = hybrid_recommendations(current_user.username,str(line_item.product_id), matrix, svd)
         recommendations_list.append(df['productId'].tolist())
-        print("recommendations list:")
-        print(recommendations_list)
+        
+
+    print("recommendations list:")
+    print(recommendations_list)
+
+    print("prodt id list in line items")
+    print(line_item_product_id_list)
+
+    ##remove duplicates from the final list of recommended ids
+    
+    # Convert each inner list to a tuple and create a set to remove duplicates
+    unique_tuples = set(tuple(inner_list) for inner_list in recommendations_list)
+
+    # Convert the unique tuples back to lists
+    recommendations_list_unique_values = [list(unique_tuple) for unique_tuple in unique_tuples]
+
 
     #####get each product from product id in recommendations
-    for sublist in recommendations_list:
+    for sublist in recommendations_list_unique_values:
         for product_id in sublist:
-            recommended_products_from_list.append(Products.query.filter_by(id=product_id).first())
+            if product_id not in line_item_product_id_list:
+                recommended_products_from_list.append(Products.query.filter_by(id=product_id).first())
 
 
 

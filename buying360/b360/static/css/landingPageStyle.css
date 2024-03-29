@@ -19,7 +19,7 @@ thead {
 
 .section-1{
   background-color: #f5f5f5;
-  height: 60vh;
+  height: 50vh;
 }
 
 .section-2{
@@ -35,9 +35,9 @@ thead {
   padding-top:10%;
 }
 
-.popular-items-section{
+/* .popular-items-section{
   height: 90vh;
-}
+} */
 
 .popular-items{
   padding-top: 5%;
@@ -91,10 +91,12 @@ thead {
 
 /* #26495f, #42708d */
 
-
+.card{
+  margin-bottom: 1rem;
+}
 
 .card-img-top {
-  width: 300px; /* Set your desired width */
+  width: 325px; /* Set your desired width */
   height: 300px; /* Set your desired height */
   object-fit: contain; 
 
@@ -105,4 +107,8 @@ thead {
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 200px; /* Adjust this width according to your preference */
+}
+
+.custom-container{
+  min-height: 80vh;
 }

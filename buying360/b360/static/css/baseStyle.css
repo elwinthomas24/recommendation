@@ -24,11 +24,7 @@
 } */
 
 /* body {
-  font-family: "Poppins", sans-serif;
-  font-weight: 300;
-  color: #444;
-  line-height: 1.9;
-  background-color: #f3f3f3;
+  min-height: 100vh;
 } */
 
 /* .title {
@@ -146,10 +142,11 @@
 /* FOOTER */
 .footer {
   padding: 5rem 3rem;
-  margin-top: 3rem;
+  /* margin-top: 3rem; */
   background-color: #37383d;
-  /* position: fixed;
-  width: 100%; */
+   /* position: fixed;
+  width: 100%;
+  bottom:0; */
 }
 
 .footer__nav {

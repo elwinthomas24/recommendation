@@ -19,8 +19,8 @@
       <!-- <div class ="row"> -->
         <div class="container popular-items-section">
           <div class="popular-items"><h5>Popular Items</h5></div>
-        <!-- </div>
-        <div class="container"> -->
+          
+        <div class="container">
           <div class="row">
             <div class="col-md-4">
               <div class="card">
@@ -67,8 +67,33 @@
             </div>
           </div>
         </div>
+        {% if popular_products|length == 0 %}
+          <div style="text-align: center;"><h4>There are no current recommendations.</h4></div>
+          {% else %}
+        <div class="row">
+          {% for popular_product in popular_products %}
+          <div class="col-md-4">
+            <div class="card">
+              
+              <img src="static/img/product_imgs/{{popular_product.id}}.png" class="card-img-top" alt="Product Image">
+           
+              <div class="card-body">
+                <h5 class="card-title">{{ popular_product.product_name }}</h5>
+                
+                <form action ="/process_search" method="POST" autocomplete="off">
+                  <input type="text" style="visibility: hidden;" name="searched" value="{{popular_product.product_name}}" >
+                  <div class="text-left">
+                    <button type="submit" class="btn btn-primary ">Browse</button>
+                  </div>
+              </form>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+          {% endif %}
+         </div>
         
         
-      <!-- </div> -->
+      </div>
   
 {% endblock %}

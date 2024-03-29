@@ -2,9 +2,14 @@
 <link
   rel="stylesheet"
   href="{{ url_for('static', filename='css/cartPageStyle.css') }}"
-/>{% endblock %}{% block title %} Cart {% endblock %} {% block content %}
+/>
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/landingPageStyle.css') }}"
+/>
+{% endblock %}{% block title %} Cart {% endblock %} {% block content %}
 
-    <div class="container">
+    <div class="container" style="padding-top: 1rem;">
         <!-- <div class="col-9 "> -->
             <!-- <div class="row" style="margin: 2.5rem 7rem 0rem 7rem">
                 <div class="col-lg-9">
@@ -14,7 +19,7 @@
             {% if line_items == [] %}
 
             <div class="row">
-              <h2>Your cart is currently empty.</h2>
+              <h2 style="text-align: center;">Your cart is currently empty.</h2>
             </div>
 
             {% else %}
@@ -22,13 +27,30 @@
             {% for line_item in line_items %}
             
                 
-                  <div class="col-lg-9">
+                  <!-- <div class="col-lg-9">
                     <div class="card wide-card line-item-cards">
                       <div class="card-body">
                         <h5 class="card-title">{{line_item.product_name}}</h5>
                         <p class="card-text">Quantity: {{line_item.quantity}}</p>
                         <p class="card-text">Cost: <span style="color:green">${{line_item.total_price}}</span></p>
-                        <!-- You can add more content here -->
+                        You can add more content here -->
+                      <!-- </div>
+                    </div>
+                  </div> -->
+
+                  <div class="col-lg-9">
+                    <div class="card wide-card line-item-cards">
+                      <div class="card-body">
+                        <div class="row">
+                          <div class="col-md-8">
+                            <h5 class="card-title">{{line_item.product_name}}</h5>
+                            <p class="card-text">Quantity: {{line_item.quantity}}</p>
+                            <p class="card-text">Cost: <span style="color:green">${{line_item.total_price}}</span></p>
+                          </div>
+                          <div class="col-md-4">
+                            <img src="static/img/product_imgs/{{line_item.product_id}}.png" class="card-img-side" alt="Placeholder">
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -41,11 +63,11 @@
                 <div class="col-lg-3">
                   <div class="card">
                     <div class="card-body">
-                      <p class="card-text">Ship To: </p>
+                      <p class="card-text">Ship To: {{current_user.username}}</p>
                       <p class="card-text">Address: </span></p>
                       <form method="POST" autocomplete="off">
                         {{ submit_request_form.hidden_tag() }}
-                      <p> {{ submit_request_form.submit(class="btn btn-lg btn-primary") }}</p>
+                      <p> {{ submit_request_form.submit(class="btn btn-lg btn-primary") }} </p>
                     </form>
                       <!-- You can add more content here -->
                     </div>
@@ -70,7 +92,7 @@
                         <div class="card-body">
                           <h5 class="card-title">{{ recommended_product.product_name }}</h5>
                           <p class="card-text"><span style="font-weight: bold;">{{recommended_product.price}}</span> USD per each</p>
-                          <form method="POST" >
+                          <form method="POST" action="/add_recommended">
                             {{ add_to_cart_form.hidden_tag() }}
                           <input
               id="add_to_cart_item"
@@ -94,3 +116,4 @@
         
   
 {% endblock %}
+
