@@ -2,7 +2,7 @@
 <link
   rel="stylesheet"
   href="{{ url_for('static', filename='css/landingPageStyle.css') }}"
-/>{% endblock %}{% block title %} Events {% endblock %} {% block content %}
+/>{% endblock %}{% block title %} Search For Products {% endblock %} {% block content %}
 
     <div class="section-1">
           <div class="col-15">
@@ -95,5 +95,121 @@
         
         
       </div>
+    
+
+
+    </div>
+    <div id="chat-container">
+      <div class="chat-header">
+        <h2>Chatbot</h2>
+        <span class="close-button">&times;</span>
+      </div>
+      <div id="chat-content"></div>
+      <div class="input-container">
+      <input type="text" id="message-input" placeholder="Type your message here...">
+      <button id="send-button">Send</button>
+    </div>
+    </div>
+    
+    <!-- Icon to open chat -->
+    <div id="chat-icon" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999; cursor: pointer;">
+      <img src="/static/img/chat-icon.png" alt="Chat Icon" width="50">
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+          const chatContainer = document.getElementById('chat-container');
+          const messageInput = document.getElementById('message-input');
+          const sendButton = document.getElementById('send-button');
+          const chatIcon = document.getElementById('chat-icon');
+          const chatContent = document.getElementById('chat-content');
+          const closeButton = document.querySelector('.close-button');
+
+
+
+          // Function to display messages in the chat window
+          function displayMessage(message, sender) {
+              // const messageElement = document.createElement('div');
+              // messageElement.textContent = `${sender}: ${message}`;
+              // chatContainer.appendChild(messageElement);
+              // chatContainer.scrollTop = chatContainer.scrollHeight; // Scroll to bottom
+              const messageDiv = document.createElement('div');
+    messageDiv.classList.add('message');
+    
+    const senderElement = document.createElement('div');
+    senderElement.textContent = sender + ': ';
+    senderElement.classList.add('sender');
+    
+    const messageElement = document.createElement('div');
+    messageElement.textContent = message;
+    messageElement.classList.add('message-text');
+    
+    messageDiv.appendChild(senderElement);
+    messageDiv.appendChild(messageElement);
+    
+    chatContent.appendChild(messageDiv);
+    chatContent.scrollTop = chatContent.scrollHeight; // Scroll to bottom
+          }
+
+            // Show chat when chat icon is clicked
+  chatIcon.addEventListener('click', function() {
+    chatContainer.style.display = 'block';
+    chatIcon.style.display = 'none'; 
+  });
+
+  // Hide chat and show chat icon when close button is clicked
+  closeButton.addEventListener('click', function() {
+    chatContainer.style.display = 'none';
+    chatIcon.style.display = 'block'; 
+  });
+
+          // Function to send message to the backend
+          function sendMessage() {
+              const message = messageInput.value;
+              if (message.trim() === '') return; // Ignore empty messages
+
+              // Send message to backend
+              fetch('/chatbot', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({ message: message })
+              })
+              .then(response => response.json())
+              .then(data => {
+                  // Display chatbot's response
+                  displayMessage(data.chatbot_response, 'Chatbot');
+                  // Display product recommendations
+                  if (data.recommendations.length > 0) {
+                      displayMessage('Here are some product recommendations:', 'Chatbot');
+                      data.recommendations.forEach(product => {
+                          displayMessage(product, 'Chatbot');
+                      });
+                  }
+              })
+              .catch(error => {
+                  console.log('Error sending message:', error);
+                  displayMessage('An error occurred. Please try again.', 'Chatbot');
+              });
+
+              // Clear message input
+              messageInput.value = '';
+          }
+
+          // Send message when Send button is clicked
+          sendButton.addEventListener('click', sendMessage);
+
+          // Send message when Enter key is pressed in the input field
+          messageInput.addEventListener('keypress', function(event) {
+              if (event.key === 'Enter') {
+                  sendMessage();
+              }
+          });
+
+          // Initial greeting from the chatbot
+          displayMessage('Hello! How can I assist you?', 'Chatbot');
+      });
+  </script>
   
 {% endblock %}

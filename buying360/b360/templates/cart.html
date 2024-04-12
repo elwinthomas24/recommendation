@@ -50,6 +50,17 @@
                           <div class="col-md-4">
                             <img src="static/img/product_imgs/{{line_item.product_id}}.png" class="card-img-side" alt="Placeholder">
                           </div>
+                          <form method="POST" action="/deleteLineItem">
+                            {{ delete_line_item_form.hidden_tag() }}
+                          <input
+              id="delete_line_item"
+              name="delete_line_item"
+              type="hidden"
+              value="{{line_item.cart_id}}"
+            />
+            {{ delete_line_item_form.submit(class = "btn btn-primary btn-block")}}
+                          
+                          </form>
                         </div>
                       </div>
                     </div>

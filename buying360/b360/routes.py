@@ -1,7 +1,7 @@
 from b360 import app
-from flask import render_template, redirect, url_for, request
+from flask import render_template, redirect, url_for, request, jsonify
 from b360.models import Users, Products, CartLineItem, SubmittedPR
-from b360.forms import CancelRegisterForm, RegisterForm, LoginForm, AddToCart, SubmitPRForm, SearchForm
+from b360.forms import CancelRegisterForm, RegisterForm, LoginForm, AddToCart, SubmitPRForm, SearchForm, DeleteLineItem
 from b360 import db
 from flask_login import login_user,logout_user, login_required, current_user
 from flask.helpers import flash
@@ -10,6 +10,27 @@ import pandas as pd
 import joblib
 from surprise import SVD, Reader, Dataset
 from surprise.model_selection import cross_validate
+import torch
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, AutoModelForCausalLM
+# from b360.custom_preprocessing import chat
+from b360.chat import get_response
+import re
+
+
+###       blenderbot ##############
+# model_name = "facebook/blenderbot-400M-distill"
+
+# # Load model (download on first run and reference local installation for consequent runs)
+# model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
+# tokenizer = AutoTokenizer.from_pretrained(model_name)
+
+# conversation_history = []
+
+
+
+
+
+
 
 
 ####################   Reused Functions ####################
@@ -155,19 +176,40 @@ def addToCart():
             flash(f"Item added to cart.", category='success')    
     return
 
+###### handles delete line item from cart in cart page
+@app.route('/deleteLineItem', methods = ['GET','POST'])
+@login_required
+def delete_line_item():
+    delete_line_item_form = DeleteLineItem()
+    if delete_line_item_form.validate_on_submit():
+        deleteLineItem()
+    print("recommended item added")
+    return redirect(url_for('cart_page'))
+
 @app.route('/catalog', methods = ['GET','POST'])
 @login_required
 def catalog_page():
     
     search_query = str(request.args.get('search_query'))
+    print("search query")
+    print(search_query)
     searched_products = Products.query.filter(Products.product_description.like('%' + search_query + '%')).all()
+    searched_products.append(Products.query.filter_by(product_name = search_query).first())
+    print("searched Products")
+    print(searched_products)
+
+    ######Perform clean up of searched products
+    if len(searched_products) ==1 and None in searched_products:
+        searched_products = []
+    elif len(searched_products) > 1 and None in searched_products:   #####removing occurences of none 
+        filtered_searched_products = list(filter(lambda x: x is not None, searched_products))
 
     add_to_cart_form = AddToCart()
     lineItemToInsert = CartLineItem()
     if add_to_cart_form.validate_on_submit():
         addToCart()      
         
-    return render_template('catalog.html', add_to_cart_form = add_to_cart_form, searched_products = searched_products, search_query = search_query)
+    return render_template('catalog.html', add_to_cart_form = add_to_cart_form, searched_products = filtered_searched_products, search_query = search_query)
 
 
 
@@ -177,6 +219,7 @@ def cart_page():
     line_items = CartLineItem.query.filter_by(user_id = current_user.user_id).all()
     submit_request_form = SubmitPRForm()
     add_to_cart_form = AddToCart()
+    delete_line_item_form = DeleteLineItem()
     ###recommendations logic
     line_item_product_id_list = []
     recommendations_list = []       ##### this list will contain the product ids of recommended products based on current cart
@@ -248,7 +291,8 @@ def cart_page():
         flash(f"Purchase Requisition Request submitted successfully.", category='success')
         return redirect(url_for('pr_page',generated_pr_id = generated_pr_id))
 
-    return render_template('cart.html', line_items = line_items, submit_request_form = submit_request_form, recommended_products = recommended_products_from_list, add_to_cart_form = add_to_cart_form)
+    return render_template('cart.html', line_items = line_items, submit_request_form = submit_request_form, recommended_products = recommended_products_from_list, add_to_cart_form = add_to_cart_form, 
+                           delete_line_item_form = delete_line_item_form)
 
 
 
@@ -264,3 +308,137 @@ def pr_page():
 def submitted_pr_page():
 
     return render_template('submittedPRPage.html')
+
+
+############# blenderbot chatbot #################
+
+# @app.route('/chatbot', methods=['POST'])
+# def chatbot():
+#     data = request.get_json()
+#     user_message = data['message']
+
+#     print("user message")
+#     print(user_message)
+
+#     # Create conversation history string
+#     history_string = "\n".join(conversation_history)
+
+#     # Tokenize the input text and history
+#     inputs = tokenizer.encode_plus(history_string, user_message, return_tensors="pt")
+
+#     # Generate the response from the model
+#     outputs = model.generate(**inputs, max_length=60)
+
+    
+#     # Decode the response
+#     chatbot_response = tokenizer.decode(outputs[0], skip_special_tokens=True).strip()
+
+#     # Add interaction to conversation history
+#     conversation_history.append(user_message)
+#     conversation_history.append(chatbot_response)
+
+
+#     ###placeholder response
+#     recommendations = []
+
+#     # Construct final response
+#     final_response = {
+#         'chatbot_response': chatbot_response,
+#         'recommendations': recommendations
+#     }
+
+#     return jsonify(final_response)
+
+
+
+def extract_product(query):
+    # Define keywords related to products
+    product_keywords = ['mouse', 'keyboard', 'monitor', 'headphones', 'laptop', 'phone', 'tablet', 'camera', 'printer', 'speaker']
+    
+    # Search for product keywords in the query
+    for keyword in product_keywords:
+        if re.search(r'\b{}\b'.format(keyword), query, re.IGNORECASE):
+            return keyword
+
+######### nltk chatbot ############
+@app.route('/chatbot', methods=['POST'])
+def chatbot():
+    data = request.get_json()
+    user_message = data['message']
+
+    print("user message")
+    print(user_message)
+    ##list to store products that user queries
+    products = []
+    recommendations = []
+    products.append(extract_product(user_message))
+
+    chatbot_response = get_response(user_message)
+
+    # # Return response
+    # response = chat(user_message, "microsoft/DialoGPT-medium")
+    # chatbot_response = response.get("response", "")  # Extract the "response" value
+    # print("Generated response:", chatbot_response)
+    print("products")
+    print(products)
+
+
+    if not None in products:
+        for product in products:
+            searched_products = Products.query.filter(Products.product_description.like('%' + product + '%')).all()
+
+        for searched_product in searched_products:
+            recommendations.append(searched_product.product_name)
+
+    
+
+    # Construct final response
+    final_response = {
+        'chatbot_response': chatbot_response,
+        'recommendations': recommendations
+    }
+
+    return jsonify(final_response)
+
+
+
+
+
+
+
+
+
+
+######## gpt2 trial #############
+
+
+# import tensorflow.compat.v1 as tf
+# tf.disable_v2_behavior()
+
+# # Load the GPT-2 model
+# gpt2_model_name = "124M"  # You can change this to other model sizes like "355M" or "774M"
+
+# # Directory to save GPT-2 model checkpoints
+# checkpoint_dir = os.path.join(os.getcwd(), "models", gpt2_model_name)
+
+# # Check if the GPT-2 model checkpoint exists, otherwise download it
+# if not os.path.exists(checkpoint_dir):
+#     print(f"Downloading {gpt2_model_name} model...")
+#     gpt2.download_gpt2(model_name=gpt2_model_name)
+
+# # Load the GPT-2 model
+# sess = gpt2.start_tf_sess()
+# gpt2.load_gpt2(sess, model_name=gpt2_model_name)
+
+# # Create a TensorFlow session with an explicitly specified graph
+# graph = tf.Graph()
+# with graph.as_default():
+#     sess = gpt2.start_tf_sess(graph=graph)
+#     gpt2.load_gpt2(sess, model_name=gpt2_model_name)
+
+# def get_product_recommendations(query):
+#     # Example: Implement your logic to fetch product recommendations based on the query
+#     # This could involve searching your product database for relevant items
+#     # For simplicity, I'm returning static recommendations here
+#     recommendations = ['Product A', 'Product B', 'Product C']
+#     return recommendations

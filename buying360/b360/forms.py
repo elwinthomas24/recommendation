@@ -59,5 +59,8 @@ class SearchForm(FlaskForm):
 class AddToCart(FlaskForm):
     submit = SubmitField(label = 'Add To Cart')
 
+class DeleteLineItem(FlaskForm):
+    submit = SubmitField(label = 'Delete line item')
+
 class SubmitPRForm(FlaskForm):
     submit = SubmitField(label = "Submit Request")
