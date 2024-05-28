@@ -225,3 +225,44 @@ chatbot styling
   padding: 10px;
   border-top: 1px solid #ccc;
 }
+
+/* User messages */
+.message.user {
+  justify-content: flex-end;
+  align-self: flex-end;
+  margin-left: auto; /* Push the message bubble to the right side */
+}
+
+.message-text {
+  padding: 10px;
+  border-radius: 20px;
+  max-width: 70%;
+  display: inline-block; 
+}
+
+.message.user .message-text {
+  margin-top:0.5rem;
+  background-color: #4abc65; /* Light green */
+  color: #ffffff; /* Dark green */
+  border: 1px solid #c3e6cb;
+  text-align: right;
+  border-radius: 20px 20px 20px 0 ;
+}
+
+.message.user .sender {
+  display: none; /* Hide the sender name for user messages */
+}
+
+
+.message.chatbot .sender {
+  display: none; /* Hide the sender name for user messages */
+}
+
+/* Chatbot messages */
+.message.chatbot .message-text {
+  margin-top:0.5rem;
+  background-color: #0a89eb; /* Light grey */
+  color: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 20px 20px 20px 0; /* Rounded bubble */
+}

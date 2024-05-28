@@ -62,6 +62,9 @@ def login_page():
     form = LoginForm()
     if form.validate_on_submit():
         attempted_user = Users.query.filter_by(username =form.username.data).first()
+        if not(attempted_user):
+            flash("There is no account with that username",category="danger")
+            return redirect(url_for("login_page"))
         print(attempted_user.username)
         if attempted_user and attempted_user.check_password_correction(
             attempted_password=form.password.data
@@ -191,25 +194,26 @@ def delete_line_item():
 def catalog_page():
     
     search_query = str(request.args.get('search_query'))
+    filtered_searched_products = []
     print("search query")
     print(search_query)
-    searched_products = Products.query.filter(Products.product_description.like('%' + search_query + '%')).all()
-    searched_products.append(Products.query.filter_by(product_name = search_query).first())
+    searched_products = list(Products.query.filter(Products.product_description.like('%' + search_query + '%')).all())
+    # searched_products.append(Products.query.filter_by(product_name = search_query).first())
     print("searched Products")
     print(searched_products)
-
+    
     ######Perform clean up of searched products
     if len(searched_products) ==1 and None in searched_products:
         searched_products = []
     elif len(searched_products) > 1 and None in searched_products:   #####removing occurences of none 
-        filtered_searched_products = list(filter(lambda x: x is not None, searched_products))
+        searched_products = list(filter(lambda x: x is not None, searched_products))
 
     add_to_cart_form = AddToCart()
     lineItemToInsert = CartLineItem()
     if add_to_cart_form.validate_on_submit():
         addToCart()      
         
-    return render_template('catalog.html', add_to_cart_form = add_to_cart_form, searched_products = filtered_searched_products, search_query = search_query)
+    return render_template('catalog.html', add_to_cart_form = add_to_cart_form, searched_products = searched_products, search_query = search_query)
 
 
 
@@ -353,7 +357,8 @@ def submitted_pr_page():
 
 def extract_product(query):
     # Define keywords related to products
-    product_keywords = ['mouse', 'keyboard', 'monitor', 'headphones', 'laptop', 'phone', 'tablet', 'camera', 'printer', 'speaker']
+    product_keywords = ['mice','mouse', 'keyboard', 'monitor', 'headphones','headphone', 
+                        'laptop','laptops', 'phone', 'tablet', 'camera', 'printer', 'speaker','earphones','earphone']
     
     # Search for product keywords in the query
     for keyword in product_keywords:
@@ -387,10 +392,19 @@ def chatbot():
         for product in products:
             searched_products = Products.query.filter(Products.product_description.like('%' + product + '%')).all()
 
-        for searched_product in searched_products:
-            recommendations.append(searched_product.product_name)
+        # for searched_product in searched_products:
+        #     recommendations.append(searched_product.product_name)
+        # Iterate through the original list and append only the first 3 objects
+        for index, searched_product in enumerate(searched_products):
+            if index < 3:
+                recommendations.append(searched_product.product_name)
+            else:
+                break  # Stop the loop once the first 3 objects are appended
 
-    
+
+    #### handle 'I do not understand' in case recommendation is not empty
+    if len(recommendations) != 0:
+        chatbot_response = ''
 
     # Construct final response
     final_response = {

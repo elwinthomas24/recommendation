@@ -85,10 +85,10 @@
         "patterns": [
           "I'm looking for a",
           "Can you suggest",
-          "Please recommend a "
+          "Please recommend a"
         ],
         "responses": [
-          " Here are a few recommendations "
+          "Sure, here are a few recommendations "
         ]
       }
     ]

@@ -7,7 +7,7 @@
     <div class="section-1">
           <div class="col-15">
             <span class="page-title">
-              <h2>Find things you need for work.</h2>
+              <h2>Work Smarter, Shop Better!</h2>
             </span>
             <form action="/process_search" method="POST" class="search-form" autocomplete="off">
 
@@ -146,6 +146,12 @@
     
     messageDiv.appendChild(senderElement);
     messageDiv.appendChild(messageElement);
+
+    if (sender === 'You') {
+            messageDiv.classList.add('user');
+        } else {
+            messageDiv.classList.add('chatbot');
+        }
     
     chatContent.appendChild(messageDiv);
     chatContent.scrollTop = chatContent.scrollHeight; // Scroll to bottom
@@ -168,6 +174,9 @@
               const message = messageInput.value;
               if (message.trim() === '') return; // Ignore empty messages
 
+              // Display user's message
+              displayMessage(message, 'You');
+
               // Send message to backend
               fetch('/chatbot', {
                   method: 'POST',
@@ -178,11 +187,20 @@
               })
               .then(response => response.json())
               .then(data => {
+          
+                 // Check if chatbot_response is not an empty string
+              if (data.chatbot_response !== '') {
                   // Display chatbot's response
                   displayMessage(data.chatbot_response, 'Chatbot');
+              }
+              // display message for unhandled user input
+              if (data.chatbot_response == '' && data.recommendations.length > 0){
+                displayMessage("Sure, here are a few recommendations", 'Chatbot');
+              }
+                  
                   // Display product recommendations
                   if (data.recommendations.length > 0) {
-                      displayMessage('Here are some product recommendations:', 'Chatbot');
+                      // displayMessage('Here are some product recommendations:', 'Chatbot');
                       data.recommendations.forEach(product => {
                           displayMessage(product, 'Chatbot');
                       });

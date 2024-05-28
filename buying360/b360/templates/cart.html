@@ -50,7 +50,7 @@
                           <div class="col-md-4">
                             <img src="static/img/product_imgs/{{line_item.product_id}}.png" class="card-img-side" alt="Placeholder">
                           </div>
-                          <form method="POST" action="/deleteLineItem">
+                          <!-- <form method="POST" action="/deleteLineItem">
                             {{ delete_line_item_form.hidden_tag() }}
                           <input
               id="delete_line_item"
@@ -60,7 +60,7 @@
             />
             {{ delete_line_item_form.submit(class = "btn btn-primary btn-block")}}
                           
-                          </form>
+                          </form> -->
                         </div>
                       </div>
                     </div>
@@ -75,7 +75,7 @@
                   <div class="card">
                     <div class="card-body">
                       <p class="card-text">Ship To: {{current_user.username}}</p>
-                      <p class="card-text">Address: </span></p>
+                      <p class="card-text">Address: SAP LABS</span></p>
                       <form method="POST" autocomplete="off">
                         {{ submit_request_form.hidden_tag() }}
                       <p> {{ submit_request_form.submit(class="btn btn-lg btn-primary") }} </p>
